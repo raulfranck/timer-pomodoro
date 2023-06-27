@@ -4,7 +4,7 @@ import {
   CountDownContainer,
   FormContainer,
   HomeContainer,
-  MinutesAmaountInput,
+  MinutesAmountInput,
   Separator,
   StartCountDownButton,
   TaskInput,
@@ -15,15 +15,21 @@ import * as zod from 'zod'
 
 const newFormValidationSchema = zod.object({
   task: zod.string().min(1, 'Digite a sua tarefa'),
-  minutesAmaount: zod.number().min(5).max(60),
+  minutesAmount: zod.number().min(5).max(60),
 })
 
+type NewCycleFormData = zod.infer<typeof newFormValidationSchema>
+
 export function Home() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch } = useForm<NewCycleFormData>({
     resolver: zodResolver(newFormValidationSchema),
+    defaultValues: {
+      task: '',
+      minutesAmount: 5,
+    },
   })
 
-  function handleCreateNewCycle(data: any) {
+  function handleCreateNewCycle(data: NewCycleFormData) {
     console.log(data)
   }
 
@@ -48,7 +54,7 @@ export function Home() {
             <option value="projeto 4"></option>
           </datalist>
           <label htmlFor="minutesAmount">durante</label>
-          <MinutesAmaountInput
+          <MinutesAmountInput
             type="number"
             id="minutesAmount"
             placeholder="00"
